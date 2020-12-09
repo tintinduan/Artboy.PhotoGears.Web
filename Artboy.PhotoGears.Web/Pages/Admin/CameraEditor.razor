@@ -1,0 +1,355 @@
+﻿
+<style>
+    div.validation-message {
+        color: rgb(220,53,69);
+        font-weight: 500
+    }
+</style>
+@if (ShowDialog)
+{<div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="bg-@ThemeColor text-white text-center">@TitleText a Camera</h3>
+                    <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if(Camera != null)
+                    { 
+                    <EditForm Model="Camera" OnValidSubmit="SaveCamera">
+                        <DataAnnotationsValidator />
+                        @if (Camera.Id != 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">ID</label>
+                                <input class="form-control col-sm-10" disabled value="@Camera.Id" />
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Maker</label>
+                            <ValidationMessage For="@(()=>Camera.Maker)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.Maker" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Brand</label>
+                            <ValidationMessage For="@(()=>Camera.Brand)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.Brand" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Model</label>
+                            <ValidationMessage For="@(()=>Camera.Model)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.Model" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Serial Number</label>
+                            <ValidationMessage For="@(()=>Camera.SerialNumber)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.SerialNumber" />
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Camera Type</label>
+                            <ValidationMessage For="@(()=>Camera.CameraType)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Camera.CameraType">
+                                @foreach (CameraTypeEnum item in Enum.GetValues(typeof(CameraTypeEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Image Type</label>
+                            <ValidationMessage For="@(()=>Camera.ImageType)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Camera.ImageType">
+                                @foreach (ImageTypeEnum item in Enum.GetValues(typeof(ImageTypeEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Frame Size</label>
+                            <ValidationMessage For="@(()=>Camera.FrameSize)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.FrameSize" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Is Digital?</label>
+                            <ValidationMessage For="@(()=>Camera.IsDigital)" />
+                            <InputCheckbox class="form-check" @bind-Value="Camera.IsDigital" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Focusing Type</label>
+                            <ValidationMessage For="@(()=>Camera.FocusingType)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Camera.FocusingType">
+                                @foreach (FocusingTypeEnum item in Enum.GetValues(typeof(FocusingTypeEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Speed Range</label>
+                            <ValidationMessage For="@(()=>Camera.SpeedRange)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.SpeedRange" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Shutter</label>
+                            <ValidationMessage For="@(()=>Camera.Shutter)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.Shutter" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">ISO Range</label>
+                            <ValidationMessage For="@(()=>Camera.IsoRange)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.IsoRange" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Exposure Mode</label>
+                            <ValidationMessage For="@(()=>Camera.ExposureMode)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.ExposureMode" />
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Exposure Compensation</label>
+                            <ValidationMessage For="@(()=>Camera.ExposureCompensation)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.ExposureCompensation" />
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Power Source</label>
+                            <ValidationMessage For="@(()=>Camera.PowerSource)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.PowerSource" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Mount</label>
+                            <ValidationMessage For="@(()=>Camera.MountId)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Camera.MountId">
+                                @foreach (Mount item in Mounts)
+                                        {
+                                    <option value="@item.MountId">@item.Name</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Made In Country: </label>
+                            <ValidationMessage For="@(()=>Camera.MadeInCountry)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Camera.MadeInCountry">
+                                @foreach (CountriesEnum item in Enum.GetValues(typeof(CountriesEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Dimensions</label>
+                            <ValidationMessage For="@(()=>Camera.Dimensions)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.Dimensions" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Weight</label>
+                            <ValidationMessage For="@(()=>Camera.Weight)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Camera.Weight" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Status </label>
+                            <ValidationMessage For="@(()=>Camera.Status)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Camera.Status">
+                                @foreach (StatusEnum item in Enum.GetValues(typeof(StatusEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Lens Interchangeable?</label>
+                            <ValidationMessage For="@(()=>Camera.HasInterchangeableLens)" />
+                            <InputCheckbox class="form-check" @bind-Value="Camera.HasInterchangeableLens" />
+                        </div>
+
+                        @if (!Camera.HasInterchangeableLens)
+                        {
+                            if (Camera.LensId != null)
+                            {
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Lens Model</label>
+                                    <input class="col-sm-10" disabled value="@Lens.Model" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group row">
+                                    <span />
+                                    <a class="btn btn-warning" @onclick="@AddAssociatedLens">Add Associated Lens</a>
+                                </div>
+                            }
+
+                        }
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Is For Sale?</label>
+                            <ValidationMessage For="@(()=>Camera.IsForSale)" />
+                            <InputCheckbox class="form-check" @bind-Value="Camera.IsForSale" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Comment</label>
+                            <ValidationMessage For="@(()=>Camera.Comment)" />
+                            <InputTextArea class="form-control col-sm-10" @bind-Value="Camera.Comment" />
+                        </div>
+                        @if (Camera.Images != null && Camera.Images.Count > 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Edit Lens Images</label>
+                                @foreach (GearImage img in Camera.Images)
+                                {
+                                    <div>
+                                        <img src="@img.ImageUrl" width="100" />
+                                        <InputCheckbox class="form-cntrol col-sm-10" @bind-Value="img.IsUsed" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Images.Count() > 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Add Images</label>
+                                @foreach (GearImage img in Images)
+                                {
+                                    <div>
+                                        <img src="@img.ImageUrl" width="100" />
+                                        <InputCheckbox class="form-check" @bind-Value="img.IsUsed" @onclick="@(e=>ImageCheckChanged(e,img))" />
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <button type="submit" class="btn btn-@ThemeColor">Save</button>
+                        <a class="btn btn-secondary" @onclick="@Close">Cancel</a>
+                    </EditForm>
+                    }
+                    <div>
+                        <LensEditor @ref="EditorDialog"  Mounts="Mounts" IsAttched="true" AssociatedLensAdded="ConfirmAddLens"  ></LensEditor>
+                    </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+}
+@code {
+    [Inject]
+    public ICameraRepository CameraRepository { get; set; }
+    [Inject]
+    public ILensRepository LensRepository { get; set; }
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    [Parameter]
+    public long Id { get; set; } = 0;
+    [Parameter]
+    public IEnumerable<Mount> Mounts { get; set; }
+    [Parameter]
+    public IEnumerable<GearImage> Images { get; set; }
+    public LensEditor EditorDialog { get; set; }
+    public Lens Lens { get; set; } = new Lens();
+    public Camera Camera { get; set; } = new Camera();
+
+
+    public bool ShowDialog
+    {
+        get;
+        set;
+    }
+    public void Show()
+    {
+        ResetDialog();
+        ShowDialog = true;
+        StateHasChanged();
+    }
+    public void Close()
+    {
+        ResetDialog();
+
+        ShowDialog = false;
+        StateHasChanged();
+        NavManager.NavigateTo("/admin/cameras", true);
+    }
+    private void ResetDialog()
+    {
+        if (Id == 0)
+        {
+            Camera = new Camera();
+            Camera.HasInterchangeableLens = true;
+        }
+        else
+        {
+            CameraRepository.RejectChanges();
+
+        }
+    }
+    protected void AddAssociatedLens()
+    {
+        EditorDialog.Show();
+    }
+    //Image.IsUsed is changed after this event, so it's original value was passed to this event handler
+    protected void ImageCheckChanged(MouseEventArgs e, GearImage image)
+    {
+        if (!image.IsUsed)
+        {
+            if (Camera.Images == null)
+            {
+                Camera.Images = new List<GearImage>();
+            }
+            Camera.Images.Add(image);
+        }
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Camera = await CameraRepository.GetCamera(Id);
+            if(Camera.LensId != null)
+            {
+                Lens = Camera.AssociatedLens;
+                //Lens = await LensRepository.GetLens((long)Camera.LensId);
+            }
+        }
+    }
+    protected async Task SaveCamera()
+    {
+        if(Camera.HasInterchangeableLens && Camera.LensId != null)
+        {
+            Camera.HasInterchangeableLens = false;
+        }
+
+        if (Camera.Images != null && Camera.Images.Count > 0)
+        {
+            foreach (GearImage img in Camera.Images)
+            {
+                if (img.IsUsed == false)
+                {
+                    Camera.Images.Remove(img);
+                }
+            }
+        }
+
+        if (Id == 0)
+        {
+            await CameraRepository.CreateCamera(Camera);
+        }
+        else
+        {
+            await CameraRepository.UpdateCamera(Camera);
+        }
+
+        ShowDialog = false;
+        StateHasChanged();
+        NavManager.NavigateTo("/admin/cameras", true);
+    }
+
+    public async Task ConfirmAddLens(long lensId)
+    {
+        Camera.LensId = lensId;
+        Lens = await LensRepository.GetLens(lensId);
+    }
+    public string ThemeColor => Id == 0 ? "primary" : "warning";
+    public string TitleText => Id == 0 ? "Create" : "Edit";
+}

@@ -1,0 +1,134 @@
+﻿
+<style>
+    div.validation-message {
+        color: rgb(220,53,69);
+        font-weight: 500
+    }
+</style>
+@if (ShowDialog)
+{<div class="modal fade show d-block"  tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="bg-@ThemeColor text-white text-center">@TitleText a Mount</h3>
+                    <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if(Mount!=null)
+                    { 
+                        <EditForm Model="Mount" OnValidSubmit="SaveMount">
+                            <DataAnnotationsValidator />
+                            @if (Mount.MountId != 0)
+                            {
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">ID</label>
+                                    <input class="form-control col-sm-8" disabled value="@Mount.MountId" />
+                                </div>
+                            }
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Name</label>
+                                <ValidationMessage For="@(()=>Mount.Name)" />
+                                <InputText class="form-control col-sm-8" @bind-Value="Mount.Name" />
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Mount Type</label>
+                                <ValidationMessage For="@(()=>Mount.MountType)" />
+                                <InputSelect @bind-Value="Mount.MountType" class="form-control col-sm-8">
+                                    @foreach (MountTypeEnum item in Enum.GetValues(typeof(MountTypeEnum)))
+                                        {
+                                            <option value="@item">@item.GetDescription()</option>
+                                        }
+                                </InputSelect>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Flange Focal Distance</label>
+                                <ValidationMessage For="@(()=>Mount.FlangeFocalDistance)" />
+                                <InputNumber class="form-control col-sm-7" @bind-Value="Mount.FlangeFocalDistance" />
+                                <label class="col-sm-1 col-form-label">mm</label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Thread Diameter</label>
+                                <ValidationMessage For="@(()=>Mount.ThreadDiameter)" />
+                                <InputNumber class="form-control col-sm-7" @bind-Value="Mount.ThreadDiameter" />
+                                <label class="col-sm-1 col-form-label">mm</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-@ThemeColor">Save</button>
+                            <a class="btn btn-secondary" @onclick="@Close">Cancel</a>
+                        </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Inject]
+    public IMountRepository Repository { get; set; }
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    [Parameter]
+    public int Id { get; set; } = 0;
+    [Parameter]
+    public Mount Mount { get; set; } = new Mount();
+
+    public bool ShowDialog
+    {
+        get;
+        set;
+    }
+    
+    public void Show()
+    {
+        ResetDialog();
+        ShowDialog = true;
+        StateHasChanged();
+    }
+    public void Close()
+    {
+        ResetDialog();
+
+        ShowDialog = false;
+        StateHasChanged();
+        NavManager.NavigateTo("/admin/mounts", true);
+    }
+    private void ResetDialog()
+    {
+        if (Id == 0)   
+        {
+            Mount = new Mount();
+        }
+        else
+        {
+            Repository.RejectChanges();
+        }
+    }
+
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Mount = await Repository.GetMount(Id);
+        }
+    }
+    protected async Task SaveMount()
+    {
+        if (Id == 0)
+        {
+            await Repository.CreateMount(Mount);
+        }
+        else
+        {
+            await Repository.UpdateMount(Mount);
+        }
+
+        ShowDialog = false;
+        StateHasChanged();
+        NavManager.NavigateTo("/admin/mounts", true);
+    }
+    public string ThemeColor => Id == 0 ? "primary" : "warning";
+    public string TitleText => Id == 0 ? "Create" : "Edit";
+}

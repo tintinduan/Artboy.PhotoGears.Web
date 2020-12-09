@@ -1,0 +1,140 @@
+﻿@page "/admin/lenses"
+@page "/admin/Lenses/page/{Page:int}"
+
+
+    <table class="table table-sm table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Lens Image</th>
+                <th>Lens Maker</th>
+                <th>Lens Brand</th>
+                <th>Lens Model</th>
+                <th>Made In</th>
+                <th>Is For Sale?</th>
+                <td />
+            </tr>
+        </thead>
+        <tbody>
+            @if (LensData?.Results.Count() > 0)
+            {
+                @foreach (Lens p in LensData.Results)
+                {
+                    <tr>
+                        <td>@p.Id</td>
+                        <td>
+                            @if (p.Images != null && p.Images.Count > 0)
+                            {
+
+                                <img src="@(p.Images.FirstOrDefault().ImageUrl)" width="150" />
+                            }
+                        </td>
+                        <td>@p.Maker</td>
+                        <td>@p.Brand</td>
+                        <td>@p.Model</td>
+                        <td>@p.MadeInCountry.GetDescription()</td>
+                        <td>@(p.IsForSale?"Yes":"No")</td>
+                        <td>
+                            <NavLink class="btn btn-warning btn-sm"
+                                    @onclick="@(e => EditLens(e, p.Id))">
+                                Edit
+                            </NavLink>
+                            <NavLink id="btnDelete" class="btn btn-danger btn-sm" @onclick="@(e => Delete_Click(e, p.Id))">
+                                Delete
+                            </NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center bg-danger text-white">No Lens</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <NavLink @onclick="(e => EditLens(e, 0))" class="btn btn-info table-btn quick-add-btn">  Create  </NavLink>
+        <Pager Result="@LensData" PageChanged="PagerPageChanged"></Pager>
+    </div>
+    <Confirm @ref="DeleteConfirmation" ConfirmationChanged="ConfirmDelete_Click"
+             ConfirmationMessage=@($"Are you sure you want to delete \"{SelectedLens.Model}\"")>
+    </Confirm>
+
+    <LensEditor @ref="EditorDialog" Id="@SelectedLens.Id" Mounts="MountsData" Images="ImagesData" IsAttched="false"></LensEditor>
+
+    @code
+    {
+        [Inject]
+        public ILensRepository LensRepository { get; set; }
+        [Inject]
+        public IImageRepository ImageRepository { get; set; }
+        [Inject]
+        public IMountRepository MountRepository { get; set; }
+        [Inject]
+        public NavigationManager NavManager { get; set; }
+        public PageResult<Lens> LensData { get; set; } = new PageResult<Lens>();
+        [Parameter]
+        public int Page { get; set; } = 1;
+        public IEnumerable<Mount> MountsData { get; set; }
+        public IEnumerable<GearImage> ImagesData { get; set; }
+        public Lens SelectedLens { get; set; } = new Lens();
+        public LensEditor EditorDialog { get; set; }
+        protected Confirm DeleteConfirmation { get; set; }
+
+        protected async override Task OnInitializedAsync()
+        {
+            MountsData = await MountRepository.GetMounts();
+            var result = await ImageRepository.GetImages();
+            ImagesData = result.Where(c => c.IsUsed == false && c.ImageCategory == ImageCategoryEnum.Lens);
+            Page = (Page == 0) ? 1 : Page;
+            await UpdateData();
+        }
+        public async Task UpdateData()
+        {
+            LensData = await LensRepository.ListLenses(Page,8);
+            StateHasChanged();
+        }
+
+        protected async Task EditLens(MouseEventArgs e, long id)
+        {
+            if (id != 0)
+            {
+                SelectedLens = await LensRepository.GetLens(id);
+            }
+            else
+            {
+                SelectedLens = new Lens();
+            }
+
+            EditorDialog.Show();
+        }
+        protected async Task Delete_Click(MouseEventArgs e, long id)
+        {
+            SelectedLens = await LensRepository.GetLens(id);
+            DeleteConfirmation.Show();
+        }
+
+        public async Task ConfirmDelete_Click(bool deleteConfirmed)
+        {
+            if (deleteConfirmed)
+            {
+                if (SelectedLens.Images?.Count() > 0)
+                {
+                    foreach (var img in SelectedLens.Images)
+                    {
+                        img.IsUsed = false;
+                        await ImageRepository.UpdateImage(img);
+                    }
+                }
+
+                await LensRepository.DeleteLens(SelectedLens);
+                await UpdateData();
+            }
+        }
+        protected void PagerPageChanged(int page)
+        {
+            NavManager.NavigateTo("/admin/Lenses/page/" + page, true);
+        }
+    }

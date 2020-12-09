@@ -1,0 +1,19 @@
+﻿@page
+@model Artboy.PhotoGears.Web.Pages.Account.DetailsModel
+<table class="table table-sm table-bordered">
+    <tbody>
+        @if (Model.IdentityUser == null)
+        {
+            <tr><th class="text-center">No User</th></tr>
+        }
+        else
+        {
+            <tr>
+            <tr><th>Name</th><td>@Model.IdentityUser.UserName</td></tr>
+            <tr><th>Email</th><td>@Model.IdentityUser.Email</td></tr>
+            </tr>
+        }
+    </tbody>
+</table>
+@{
+}

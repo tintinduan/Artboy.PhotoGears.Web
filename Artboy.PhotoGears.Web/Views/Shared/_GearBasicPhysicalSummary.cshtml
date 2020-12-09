@@ -1,0 +1,22 @@
+﻿@model PhotoGear
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Dimensions: </label> <a>@Model.Dimensions</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Wight: </label> <a>@Model.Weight</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Status: </label> <a>@Model.Status.GetDescription()</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Comments: </label>
+            <p>
+                <textarea cols="120" disabled>@Model.Comment</textarea>
+            </p>
+        </div>
+    </div>
+</div>

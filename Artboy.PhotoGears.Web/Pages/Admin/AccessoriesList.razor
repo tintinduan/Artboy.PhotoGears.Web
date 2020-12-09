@@ -1,0 +1,140 @@
+﻿@page "/admin/accessories"
+@page "/admin/accessories/page/{Page:int}"
+
+
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Accessory Image</th>
+            <th>Accessory Maker</th>
+            <th>Accessory Brand</th>
+            <th>Accessory Model</th>
+            <th>Made In</th>
+            <th>Is For Sale?</th>
+            <td />
+        </tr>
+    </thead>
+    <tbody>
+        @if (AccessoryData?.Results.Count() > 0)
+        {
+            @foreach (Accessory p in AccessoryData.Results)
+            {
+        <tr>
+            <td>@p.Id</td>
+            <td>
+                @if (p.Images != null && p.Images.Count > 0)
+                {
+
+                    <img src="@(p.Images.FirstOrDefault().ImageUrl)" width="150" />
+                }
+            </td>
+            <td>@p.Maker</td>
+            <td>@p.Brand</td>
+            <td>@p.Model</td>
+            <td>@p.MadeInCountry.GetDescription()</td>
+            <td>@(p.IsForSale ? "Yes": "No")</td>
+            <td>
+                <NavLink class="btn btn-warning btn-sm"
+                         @onclick="@(e => EditAccessory(e, p.Id))">
+                    Edit
+                </NavLink>
+                <NavLink id="btnDelete" class="btn btn-danger btn-sm" @onclick="@(e => Delete_Click(e, p.Id))">
+                    Delete
+                </NavLink>
+            </td>
+        </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center text-white bg-danger">No Accessory</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <NavLink @onclick="(e => EditAccessory(e, 0))" class="btn btn-info table-btn quick-add-btn">  Create  </NavLink>
+    <Pager Result="@AccessoryData" PageChanged="PagerPageChanged"></Pager>
+</div>
+<Confirm @ref="DeleteConfirmation" ConfirmationChanged="ConfirmDelete_Click"
+         ConfirmationMessage=@($"Are you sure you want to delete \"{SelectedAccessory.Model}\"")>
+</Confirm>
+
+<AccessoryEditor @ref="EditorDialog" Id="@SelectedAccessory.Id" Mounts="MountsData" Images="ImagesData"></AccessoryEditor>
+
+@code
+    {
+    [Inject]
+    public IAccessoryRepository AccessoryRepository { get; set; }
+    [Inject]
+    public IImageRepository ImageRepository { get; set; }
+    [Inject]
+    public IMountRepository MountRepository { get; set; }
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    public PageResult<Accessory> AccessoryData { get; set; } = new PageResult<Accessory>();
+    [Parameter]
+    public int Page { get; set; } = 1;
+    public IEnumerable<Mount> MountsData { get; set; }
+    public IEnumerable<GearImage> ImagesData { get; set; }
+    public Accessory SelectedAccessory { get; set; } = new Accessory();
+    public AccessoryEditor EditorDialog { get; set; }
+    protected Confirm DeleteConfirmation { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        MountsData = await MountRepository.GetMounts();
+        var result = await ImageRepository.GetImages();
+        ImagesData = result.Where(c => c.IsUsed == false && c.ImageCategory == ImageCategoryEnum.Accessory);
+        Page = (Page == 0) ? 1 : Page;
+        await UpdateData();
+    }
+    public async Task UpdateData()
+    {
+        AccessoryData = await AccessoryRepository.ListAccessories(Page, 8);
+        StateHasChanged();
+    }
+
+    protected async Task EditAccessory(MouseEventArgs e, long id)
+    {
+        if (id != 0)
+        {
+            SelectedAccessory = await AccessoryRepository.GetAccessory(id);
+        }
+        else
+        {
+            SelectedAccessory = new Accessory();
+        }
+
+        EditorDialog.Show();
+    }
+    protected async Task Delete_Click(MouseEventArgs e, long id)
+    {
+        SelectedAccessory = await AccessoryRepository.GetAccessory(id);
+        DeleteConfirmation.Show();
+    }
+
+    public async Task ConfirmDelete_Click(bool deleteConfirmed)
+    {
+        if (deleteConfirmed)
+        {
+            if (SelectedAccessory.Images?.Count() > 0)
+            {
+                foreach (var img in SelectedAccessory.Images)
+                {
+                    img.IsUsed = false;
+                    await ImageRepository.UpdateImage(img);
+                }
+            }
+
+            await AccessoryRepository.DeleteAccessory(SelectedAccessory);
+            await UpdateData();
+        }
+    }
+    protected void PagerPageChanged(int page)
+    {
+        NavManager.NavigateTo("/admin/accessories/page/" + page, true);
+    }
+}

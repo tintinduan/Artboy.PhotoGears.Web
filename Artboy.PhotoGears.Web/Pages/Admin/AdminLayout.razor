@@ -1,0 +1,52 @@
+﻿@inherits LayoutComponentBase
+
+<div class="bg-info text-white p-2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <span class="navbar-brand ml-2">Photo Gears Administration</span>
+            </div>
+            <div class="col-2 text-right">
+                <a class="btn btn-sm btn-primary" href="/account/logout">Log Out</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row row-cols-5 bg-primary">
+        <NavLink class="col text-white"
+                 href="/admin/cameras"
+                 ActiveClass="nav-link active text-warning"
+                 Match="NavLinkMatch.Prefix">
+            Cameras
+        </NavLink>
+        <NavLink class="col text-white"
+                 href="/admin/lenses"
+                 ActiveClass="nav-link active text-warning"
+                 Match="NavLinkMatch.Prefix">
+            Lenses
+        </NavLink>
+        <NavLink class="col text-white"
+                 href="/admin/accessories"
+                 ActiveClass="nav-link active text-warning"
+                 Match="NavLinkMatch.Prefix">
+            Accessories
+        </NavLink>
+        <NavLink class="col text-white"
+                 href="/admin/mounts"
+                 ActiveClass="nav-link active text-warning"
+                 Match="NavLinkMatch.Prefix">
+            Lens Mounts
+        </NavLink>
+        <NavLink class="col text-white"
+                 href="/admin/images"
+                 ActiveClass="nav-link active ttext-warning"
+                 Match="NavLinkMatch.Prefix">
+            Images
+        </NavLink>
+    </div>
+    <div class="row">
+        @Body
+    </div>
+</div>
+

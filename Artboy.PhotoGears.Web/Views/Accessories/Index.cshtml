@@ -1,0 +1,122 @@
+﻿@model AccessoriesListViewModel
+
+@{
+    ViewData["Title"] = "Lenses";
+}
+
+
+@{
+    var prevDisabled = !Model.Accessories.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Accessories.HasNextPage ? "disabled" : "";
+}
+
+@if (Model != null && Model.Accessories.Count() != 0)
+{
+<div class="text-center bg-dark text-white">
+    <h1>Accessories</h1>
+    <form asp-action="Index" method="get">
+        <div class="form-actions no-color">
+            <p>
+                @*<select asp-for="PageSize">
+                        <option value="5">Show 5 per page</option>
+                        <option value="10">Show 10 per page</option>
+                        <option value="15">Show 15 per page</option>
+                    </select>*@
+                Find Accessory:
+                <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                <input type="submit" value="Search" class="btn btn-info" /> |
+                <a asp-action="Index">Back to Full List</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th>
+                        Picture
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["CountrySortParm"]"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">Made In</a>
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["MakerSortParm"]"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">Maker </a>
+                    </th>
+                    <th>
+                        Brand
+                    </th>
+                    <th>
+                        Model
+                    </th>
+                    <th>
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["TypeSortParm"]"
+                           asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                            Accessory Type
+                        </a>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Accessories)
+                {
+                    <tr>
+                        <td>
+                            @if (item.Images != null && item.Images.Count() != 0)
+                            {
+                                <a class="btn btn-sm btn-outline-info" asp-action="Details"
+                                   asp-route-id="@item.Id">
+                                    <img src="@item.Images.FirstOrDefault().ImageUrl" width="150" />
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MadeInCountry)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Maker)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Brand)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Model)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccessoryType)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.Accessories.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-primary @prevDisabled">
+            Previous
+        </a>
+        <a asp-action="Index"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.Accessories.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-primary @nextDisabled">
+            Next
+        </a>
+
+        }
+        else
+        {
+        <div class="bg-danger">
+            <h5> No Accessory Found</h5>
+        </div>
+
+        }

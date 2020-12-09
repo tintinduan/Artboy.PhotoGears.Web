@@ -1,0 +1,15 @@
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\bin\Debug\net5.0\Artboy.PhotoGears.Models.deps.json
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\bin\Debug\net5.0\Artboy.PhotoGears.Models.runtimeconfig.json
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\bin\Debug\net5.0\Artboy.PhotoGears.Models.runtimeconfig.dev.json
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\bin\Debug\net5.0\Artboy.PhotoGears.Models.dll
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\bin\Debug\net5.0\ref\Artboy.PhotoGears.Models.dll
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\bin\Debug\net5.0\Artboy.PhotoGears.Models.pdb
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.csprojAssemblyReference.cache
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.AssemblyInfoInputs.cache
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.AssemblyInfo.cs
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.csproj.CoreCompileInputs.cache
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.dll
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\ref\Artboy.PhotoGears.Models.dll
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.pdb
+C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Model\obj\Debug\net5.0\Artboy.PhotoGears.Models.genruntimeconfig.cache

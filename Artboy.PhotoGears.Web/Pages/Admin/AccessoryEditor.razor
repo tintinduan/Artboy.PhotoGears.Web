@@ -1,0 +1,230 @@
+﻿
+<style>
+    div.validation-message {
+        color: rgb(220,53,69);
+        font-weight: 500
+    }
+</style>
+@if (ShowDialog)
+{<div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="bg-@ThemeColor text-white text-center">@TitleText a Accessory</h3>
+                    <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (Accessory != null)
+                    {
+                    <EditForm Model="Accessory" OnValidSubmit="SaveAccessory">
+                        <DataAnnotationsValidator />
+                        @if (Accessory.Id != 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">ID</label>
+                                <input class="form-control col-sm-10" disabled value="@Accessory.Id" />
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Maker</label>
+                            <ValidationMessage For="@(()=>Accessory.Maker)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.Maker" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Brand</label>
+                            <ValidationMessage For="@(()=>Accessory.Brand)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.Brand" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Model</label>
+                            <ValidationMessage For="@(()=>Accessory.Model)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.Model" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Serial Number</label>
+                            <ValidationMessage For="@(()=>Accessory.SerialNumber)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.SerialNumber" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Accessory Type</label>
+                            <ValidationMessage For="@(()=>Accessory.AccessoryType)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.AccessoryType" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Accessory Detail</label>
+                            <ValidationMessage For="@(()=>Accessory.AccessoryDetail)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.AccessoryDetail" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Made In Country: </label>
+                            <ValidationMessage For="@(()=>Accessory.MadeInCountry)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Accessory.MadeInCountry">
+                                @foreach (CountriesEnum item in Enum.GetValues(typeof(CountriesEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Dimensions</label>
+                            <ValidationMessage For="@(()=>Accessory.Dimensions)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.Dimensions" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Weight</label>
+                            <ValidationMessage For="@(()=>Accessory.Weight)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Accessory.Weight" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Status </label>
+                            <ValidationMessage For="@(()=>Accessory.Status)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Accessory.Status">
+                                @foreach (StatusEnum item in Enum.GetValues(typeof(StatusEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Is For Sale?</label>
+                            <ValidationMessage For="@(()=>Accessory.IsForSale)" />
+                            <InputCheckbox class="form-check" @bind-Value="Accessory.IsForSale" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Comment</label>
+                            <ValidationMessage For="@(()=>Accessory.Comment)" />
+                            <InputTextArea class="form-control col-sm-10" @bind-Value="Accessory.Comment" />
+                        </div>
+                        @if (Accessory.Images != null && Accessory.Images.Count > 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Edit Accessory Images</label>
+                                @foreach (GearImage img in Accessory.Images)
+                                {
+                                    <div>
+                                        <img src="@img.ImageUrl" width="100" />
+                                        <InputCheckbox class="form-cntrol col-sm-10" @bind-Value="img.IsUsed" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Images.Count() > 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Add Images</label>
+                                @foreach (GearImage img in Images)
+                                {
+                                    <div>
+                                        <img src="@img.ImageUrl" width="100" />
+                                        <InputCheckbox class="form-check" @bind-Value="img.IsUsed" @onclick="@(e=>ImageCheckChanged(e,img))" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <label class="col-sm-2 col-form-label"></label>
+                        <button type="submit" class="btn btn-@ThemeColor">Save</button>
+                        <a class="btn btn-secondary" @onclick="@Close">Cancel</a>
+                    </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@code {
+    [Inject]
+    public IAccessoryRepository AccessoryRepository { get; set; }
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    [Parameter]
+    public long Id { get; set; } = 0;
+    public Accessory Accessory { get; set; } = new Accessory();
+    [Parameter]
+    public IEnumerable<Mount> Mounts { get; set; }
+    [Parameter]
+    public IEnumerable<GearImage> Images { get; set; }
+
+
+    public bool ShowDialog
+    {
+        get;
+        set;
+    }
+    public void Show()
+    {
+        InitDialog();
+        ShowDialog = true;
+        StateHasChanged();
+    }
+    public void Close()
+    {
+        ResetDialog();
+
+        ShowDialog = false;
+        StateHasChanged();
+    }
+    private void InitDialog()
+    {
+        if (Id == 0)
+        {
+            Accessory = new Accessory();
+        }
+    }
+    private void ResetDialog()
+    {
+        AccessoryRepository.RejectChanges();
+
+    }
+  
+    protected void ImageCheckChanged(MouseEventArgs e, GearImage image)
+    {
+        if (!image.IsUsed)
+        {
+            if (Accessory.Images == null)
+            {
+                Accessory.Images = new List<GearImage>();
+            }
+            Accessory.Images.Add(image);
+        }
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Accessory = await AccessoryRepository.GetAccessory(Id);
+        }
+
+    }
+    protected async Task SaveAccessory()
+    {
+        if (Accessory.Images != null && Accessory.Images.Count > 0)
+        {
+            foreach (GearImage img in Accessory.Images)
+            {
+                if (img.IsUsed == false)
+                {
+                    Accessory.Images.Remove(img);
+                }
+            }
+        }
+        if (Id == 0)
+        {
+            await AccessoryRepository.CreateAccessory(Accessory);
+        }
+        else
+        {
+            await AccessoryRepository.UpdateAccessory(Accessory);
+        }
+
+        ShowDialog = false;
+        StateHasChanged();
+        NavManager.NavigateTo("/admin/accessories", true);
+    }
+
+    public string ThemeColor => Id == 0 ? "primary" : "warning";
+    public string TitleText => Id == 0 ? "Create" : "Edit";
+}

@@ -1,0 +1,52 @@
+﻿
+@if (Result != null)
+{
+    <div class="row">
+        <div class="col-md-8 col-sm-8">
+            @if (Result.PageCount > 1)
+            {
+                <ul class="pagination pull-right">
+                    <li><NavLink @onclick="@(() => PagerButtonClicked(1))" class="btn">&laquo;</NavLink></li>
+                    @for (var i = StartIndex; i <= FinishIndex; i++)
+                    {
+                        var currentIndex = i;
+                        @if (i == Result.CurrentPage)
+                        {
+                            <li><span class="btn">@i</span></li>
+                        }
+                        else
+                        {
+                            <li><NavLink @onclick="@(() => PagerButtonClicked(currentIndex))" class="btn">@currentIndex</NavLink></li>
+                        }
+                    }
+                    <li><NavLink @onclick="@(() => PagerButtonClicked(Result.PageCount))" class="btn">&raquo;</NavLink></li>
+                </ul>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public PagedResultBase Result { get; set; }
+
+    [Parameter]
+    public Action<int> PageChanged { get; set; }
+
+    protected int StartIndex { get; private set; } = 0;
+    protected int FinishIndex { get; private set; } = 0;
+
+    protected override void OnParametersSet()
+    {
+        StartIndex = Math.Max(Result.CurrentPage - 5, 1);
+        FinishIndex = Math.Min(Result.CurrentPage + 5, Result.PageCount);
+
+        base.OnParametersSet();
+    }
+
+    protected void PagerButtonClicked(int page)
+    {
+        PageChanged?.Invoke(page);
+    }
+
+}

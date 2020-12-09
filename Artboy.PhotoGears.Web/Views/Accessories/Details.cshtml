@@ -1,0 +1,19 @@
+﻿@model Artboy.PhotoGears.Models.ViewModels.AccessoryViewModel
+<partial name="_GearBasicSummary" model="@Model.Accessory" />
+<div class="row">
+    <div class="col">
+        <div class="col">
+            <label class="font-weight-bolder">Accessory Type: </label><a> @Model.Accessory.AccessoryType</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Details: </label><a> @Model.Accessory.AccessoryDetail</a>
+        </div>
+    </div>
+</div>
+<partial name="_GearBasicPhysicalSummary" model="@Model.Accessory" />
+<p/>
+<partial name="_GearImagesSummary" model="@Model.Accessory"/>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+  

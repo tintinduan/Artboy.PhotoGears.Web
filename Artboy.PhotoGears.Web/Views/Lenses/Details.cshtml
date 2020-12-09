@@ -1,0 +1,9 @@
+﻿@model Artboy.PhotoGears.Models.ViewModels.LensViewModel
+<partial name="_GearBasicSummary" model="@Model.Lens" />
+<partial name="_LensSummary" model="@Model.Lens" />
+<partial name="_GearBasicPhysicalSummary" model="@Model.Lens"/>
+<p/>
+<partial name="_GearImagesSummary" model="@Model.Lens" />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

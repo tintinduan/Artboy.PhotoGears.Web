@@ -1,0 +1,44 @@
+﻿@model Lens
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Lens Category: </label> <a>@Model.LensCategory.GetDescription()</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Lens Type: </label> <a>@Model.LensType.GetDescription()</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Focusing Type: </label> <a>@Model.FocusingType.GetDescription()</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Lens Mount: </label> <a>@Model.LensMount.Name</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Focal Length: </label> <a>@Model.FocalLength</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Filter Size: </label> <a>@Model.FilterSize mm</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Aperture Range: </label> <a>@Model.ApertureRange</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Diaphragm Blades: </label> <a>@Model.DiaphragmBlades</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Lens Construction: </label> <a>@Model.LensConstruction</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Close Focusing Distance: </label> <a>@Model.CloseFocusingDistance m</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Max Reproduction Ratio: </label> <a>@((Model.MaxReproductionRatio == null) ? "" : Model.MaxReproductionRatio.ToString() + "x")</a>
+        </div>
+    </div>
+</div>

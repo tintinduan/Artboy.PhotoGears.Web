@@ -1,0 +1,113 @@
+﻿@page "/admin/images/"
+@page "/admin/images/page/{Page:int}"
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Image</th>
+            <th>Category</th>
+            <td />
+        </tr>
+    </thead>
+    <tbody>
+        @if (ImageData?.Results?.Count() > 0)
+        {
+            @foreach (GearImage img in ImageData.Results)
+            {
+                <tr>
+                    <td>@img.Title</td>
+                    <td>
+                        <img src="@img.ImageUrl" width="200" />
+                    </td>
+                    <td>@img.ImageCategory</td>
+                    <td>
+                        <NavLink class="btn btn-info btn-sm"
+                                 @onclick="@(e=> ImageEdit(e,img.Id))">
+                            Edit
+                        </NavLink>
+                        <NavLink id="btnDelete" class="btn btn-danger btn-sm" @onclick="@(e => Delete_Click(e, img.Id))">
+                            Delete
+                        </NavLink>
+
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center bg-danger text-white">No Image</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <NavLink class="btn btn-info" @onclick="@(e=> ImageEdit(e,0))">Create</NavLink>
+    <Pager Result="@ImageData" PageChanged="PagerPageChanged"></Pager>
+</div>
+
+<Confirm @ref="DeleteConfirmation" ConfirmationChanged="ConfirmDelete_Click"
+         ConfirmationMessage=@($"Are you sure you want to delete \"{SelectedImage.Title}\"")>
+</Confirm>
+
+<ImageEditor @ref="EditorDialog" Id=@SelectedImage.Id></ImageEditor>
+
+@code {
+    [Inject]
+    public IImageRepository Repository { get; set; }
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    [Parameter]
+    public int Page { get; set; } = 1;
+    public PageResult<GearImage> ImageData { get; set; } = new PageResult<GearImage>();
+    public GearImage SelectedImage { get; set; } = new GearImage();
+
+    public ImageEditor EditorDialog { get; set; }
+    protected Confirm DeleteConfirmation { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Page = (Page == 0) ? 1 : Page;
+        await UpdateData();
+    }
+    public async Task UpdateData()
+    {
+        ImageData = await Repository.ListImages(Page, 5);
+
+    }
+
+    protected async Task ImageEdit(MouseEventArgs e, long imageId)
+    {
+        if (imageId != 0)
+        {
+            SelectedImage = await Repository.GetImage(imageId);
+        }
+        else
+        {
+            SelectedImage = new GearImage();
+        }
+        EditorDialog.Show();
+    }
+    protected async Task Delete_Click(MouseEventArgs e, long imageId)
+    {
+        SelectedImage = await Repository.GetImage(imageId);
+        DeleteConfirmation.Show();
+    }
+
+
+    public string GetEditUrl(long id) => $"/admin/images/edit/{id}";
+
+    public async Task ConfirmDelete_Click(bool deleteConfirmed)
+    {
+        if (deleteConfirmed)
+        {
+            await Repository.DeleteImage(SelectedImage);
+            await UpdateData();
+        }
+    }
+    protected void PagerPageChanged(int page)
+    {
+        NavManager.NavigateTo("/admin/Images/page/" + page, true);
+    }
+
+}

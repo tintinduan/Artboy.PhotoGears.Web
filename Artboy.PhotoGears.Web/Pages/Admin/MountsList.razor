@@ -1,0 +1,107 @@
+﻿@page "/admin/mounts/"
+@page "/admin/mounts/page/{Page:int}"
+
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>FlangeFocalDistance</th>
+            <th>ThreadDiameter</th>
+            <th>MountType</th>
+            <td />
+        </tr>
+    </thead>
+    <tbody>
+        @if (MountData?.Results?.Count() > 0)
+        {
+            @foreach (Mount m in MountData.Results)
+            {
+                <tr>
+                    <td>@m.Name</td>
+                    <td>@($"{m.FlangeFocalDistance} mm")</td>
+                    <td>@(m.ThreadDiameter.HasValue ? $"{m.ThreadDiameter} mm" : "")</td>
+                    <td>@m.MountType.GetDescription()</td>
+                    <td>
+                        <NavLink class="btn btn-warning btn-sm"
+                                  @onclick="@(e => EditMount(e, m.MountId))">
+                            Edit
+                        </NavLink>
+                        <NavLink id="btnDelete" class="btn btn-danger btn-sm" @onclick="@(e => Delete_Click(e, m.MountId))">
+                            Delete
+                        </NavLink>
+
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center bg-danger text-white">No Mount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <NavLink @onclick="(e => EditMount(e, 0))" class="btn btn-info quick-add-btn">  Create  </NavLink>
+    <Pager Result="@MountData" PageChanged="@PagerPageChanged"> </Pager>
+</div>
+
+
+<Confirm @ref="ConfirmDialog" ConfirmationChanged="ConfirmDelete_Click"
+         ConfirmationMessage="@($"Are you sure you want to delete\"{SelectedMount.Name}\"")">
+</Confirm>
+<MountEditor @ref="EditorDialog" Id="@SelectedMount.MountId"></MountEditor>
+
+
+@code {
+    [Inject]
+    public IMountRepository Repository { get; set; }
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    [Parameter]
+    public int Page { get; set; } = 1;
+    public PageResult<Mount> MountData { get; set; } = new PageResult<Mount>();
+    public Mount SelectedMount { get; set; } = new Mount();
+    public MountEditor EditorDialog { get; set; }
+    public Confirm ConfirmDialog { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Page = (Page == 0) ? 1 : Page;
+        await UpdateData();
+    }
+    public async Task UpdateData()
+    {
+        MountData = await Repository.ListMounts(Page,10);
+    }
+    protected async Task EditMount(MouseEventArgs e, int mountId)
+    {
+        if (mountId != 0)
+        {
+            SelectedMount = await Repository.GetMount(mountId);
+        }
+        else
+        {
+            SelectedMount = new Mount();
+        }
+        EditorDialog.Show();
+    }
+    protected async Task Delete_Click(MouseEventArgs e, int mountId)
+    {
+        SelectedMount = await Repository.GetMount(mountId);
+        ConfirmDialog.Show();
+    }
+    public async Task ConfirmDelete_Click(bool deleteConfirmed)
+    {
+        if (deleteConfirmed)
+        {
+            await Repository.DeleteMount(SelectedMount);
+            await UpdateData();
+        }
+    }
+    protected void PagerPageChanged(int page)
+    {
+        NavManager.NavigateTo("/admin/mounts/page/" + page,true);
+    }
+}

@@ -1,0 +1,68 @@
+﻿@model Artboy.PhotoGears.Models.ViewModels.CameraViewModel
+
+
+<partial name="_GearBasicSummary" model="@Model.Camera" />
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Camera Type: </label><a> @Model.Camera.CameraType.GetDescription()</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Image Type: </label><a> @Model.Camera.ImageType.GetDescription()</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Frame Size: </label><a> @Model.Camera.FrameSize</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Shutter: </label><a> @Model.Camera.Shutter</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Speed Range: </label><a> @Model.Camera.SpeedRange</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Mount: </label><a> @Model.Camera.LensMount.Name</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Iso Range: </label><a> @Model.Camera.IsoRange</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Exposure Mode: </label><a> @Model.Camera.ExposureMode</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder">Exposure Compensation: </label><a> @Model.Camera.ExposureCompensation</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="font-weight-bolder">Focusing Type: </label><a> @Model.Camera.FocusingType.GetDescription()</a>
+        </div>
+        <div class="col">
+            <label class="font-weight-bolder form-check-label">Is Digital: </label><input class="form-check" type="checkbox" disabled vale="@Model.Camera.IsDigital">
+        </div>
+        <div class="col">
+        </div>
+    </div>
+
+</div>
+<partial name="_GearBasicPhysicalSummary" model="@Model.Camera" />
+@if (Model.Camera.HasInterchangeableLens == false)
+{
+<div class="row">
+        <h1 class="bg-dark text-white">
+            Lens
+        </h1>
+        <partial name="_GearBasicSummary" model="@Model.Camera.AssociatedLens" />
+        <partial name="_LensSummary" model="@Model.Camera.AssociatedLens" />
+</div>
+}
+
+<p />
+<partial name="_GearImagesSummary" model="@Model.Camera" />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

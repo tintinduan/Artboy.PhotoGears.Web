@@ -1,0 +1,141 @@
+﻿@page "/admin/cameras"
+@page "/admin/cameras/page/{Page:int}"
+@page "/admin"
+
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Camera Image</th>
+            <th>Camera Maker</th>
+            <th>Camera Brand</th>
+            <th>Camera Model</th>
+            <th>Made In</th>
+            <th>Is For Sale?</th>
+            <td />
+        </tr>
+    </thead>
+    <tbody>
+        @if (CameraData?.Results.Count() > 0)
+        {
+            @foreach (Camera p in CameraData.Results)
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>
+                        @if (p.Images != null && p.Images.Count > 0)
+                        {
+
+                            <img src="@(p.Images.FirstOrDefault().ImageUrl)" width="150" />
+                        }
+                    </td>
+                    <td>@p.Maker</td>
+                    <td>@p.Brand</td>
+                    <td>@p.Model</td>
+                    <td>@p.MadeInCountry.GetDescription()</td>
+                    <td>@(p.IsForSale ? "Yes": "No")</td>
+                    <td>
+                        <NavLink class="btn btn-warning btn-sm"
+                                @onclick="@(e => EditCamera(e, p.Id))">
+                            Edit
+                        </NavLink>
+                        <NavLink id="btnDelete" class="btn btn-danger btn-sm" @onclick="@(e => Delete_Click(e, p.Id))">
+                            Delete
+                        </NavLink>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="87" class="text-center bg-danger text-white" >No Camera</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<Confirm @ref="DeleteConfirmation" ConfirmationChanged="ConfirmDelete_Click"
+         ConfirmationMessage=@($"Are you sure you want to delete \"{SelectedCamera.Model}\"")>
+</Confirm>
+<div>
+    <NavLink @onclick="(e => EditCamera(e, 0))" class="btn btn-info table-btn quick-add-btn">  Create  </NavLink>
+    <Pager Result="@CameraData" PageChanged="PagerPageChanged"></Pager>
+</div>
+
+<CameraEditor @ref="EditorDialog" Id=@SelectedCamera.Id Images="ImageData" Mounts="MountData"></CameraEditor>
+
+
+@code
+    {
+    [Inject]
+    public ICameraRepository CameraRepository { get; set; }
+    [Inject]
+    public IImageRepository ImageRepository { get; set; }
+    [Inject]
+    public IMountRepository MountRepository { get; set; }
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    [Parameter]
+    public int Page { get; set; } = 1;
+    public PageResult<Camera> CameraData { get; set; } = new PageResult<Camera>();
+    public IEnumerable<GearImage> ImageData { get; set; }
+    public IEnumerable<Mount> MountData { get; set; }
+    public Camera SelectedCamera { get; set; } = new Camera();
+    public CameraEditor EditorDialog { get; set; }
+    protected Confirm DeleteConfirmation { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        Page = (Page == 0) ? 1 : Page;
+        MountData = await MountRepository.GetMounts();
+        var result = await ImageRepository.GetImages();
+        ImageData = result.Where(c => c.IsUsed == false && c.ImageCategory == ImageCategoryEnum.Camera);
+        await UpdateData();
+    }
+    public async Task UpdateData()
+    {
+        CameraData = await CameraRepository.ListCameras(Page,8);
+        StateHasChanged();
+    }
+
+    protected async Task EditCamera(MouseEventArgs e, long id)
+    {
+        if (id != 0)
+        {
+            SelectedCamera = await CameraRepository.GetCamera(id);
+        }
+        else
+        {
+            SelectedCamera = new Camera();
+        }
+
+
+        EditorDialog.Show();
+    }
+    protected async Task Delete_Click(MouseEventArgs e, long id)
+    {
+        SelectedCamera = await CameraRepository.GetCamera(id);
+        DeleteConfirmation.Show();
+    }
+
+    public async Task ConfirmDelete_Click(bool deleteConfirmed)
+    {
+        if (deleteConfirmed)
+        {
+            if (SelectedCamera.Images?.Count() > 0)
+            {
+                foreach (var img in SelectedCamera.Images)
+                {
+                    img.IsUsed = false;
+                    await ImageRepository.UpdateImage(img);
+                }
+            }
+            await CameraRepository.DeleteCamera(SelectedCamera);
+            await UpdateData();
+        }
+    }
+    protected void PagerPageChanged(int page)
+    {
+        NavManager.NavigateTo("/admin/cameras/page/" + page, true);
+    }
+
+}

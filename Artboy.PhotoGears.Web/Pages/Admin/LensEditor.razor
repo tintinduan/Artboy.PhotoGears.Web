@@ -1,0 +1,364 @@
+﻿
+<style>
+    div.validation-message {
+        color: rgb(220,53,69);
+        font-weight: 500
+    }
+</style>
+@if (ShowDialog)
+{<div class="modal fade show d-block"  tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="bg-@ThemeColor text-white text-center">@TitleText a Lens</h3>
+                    <button type="button" class="close" @onclick="@Close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if(Lens != null)
+                    { 
+                    <EditForm Model="Lens" OnValidSubmit="SaveLens">
+                        <DataAnnotationsValidator />
+                        @if (Lens.Id != 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">ID</label>
+                                <input class="form-control col-sm-10" disabled value="@Lens.Id" />
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Maker</label>
+                            <ValidationMessage For="@(()=>Lens.Maker)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.Maker" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Brand</label>
+                            <ValidationMessage For="@(()=>Lens.Brand)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.Brand" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Model</label>
+                            <ValidationMessage For="@(()=>Lens.Model)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.Model" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Serial Number</label>
+                            <ValidationMessage For="@(()=>Lens.SerialNumber)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.SerialNumber" />
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Category</label>
+                            <ValidationMessage For="@(()=>Lens.LensCategory)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Lens.LensCategory">
+                                @foreach (LensCategoryEnum item in Enum.GetValues(typeof(LensCategoryEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Type</label>
+                            <ValidationMessage For="@(()=>Lens.LensType)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Lens.LensType">
+                                @foreach (LensTypeEnum item in Enum.GetValues(typeof(LensTypeEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Focusing Type</label>
+                            <ValidationMessage For="@(()=>Lens.FocusingType)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Lens.FocusingType">
+                                @foreach (FocusingTypeEnum item in Enum.GetValues(typeof(FocusingTypeEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Aperture Range</label>
+                            <ValidationMessage For="@(()=>Lens.ApertureRange)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.ApertureRange" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Focal Length</label>
+                            <ValidationMessage For="@(()=>Lens.FocalLength)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.FocalLength" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Close Focusing Distance</label>
+                            <ValidationMessage For="@(()=>Lens.CloseFocusingDistance)" />
+                            <InputNumber class="form-control col-sm-9" @bind-Value="Lens.CloseFocusingDistance" />
+                            <label class="col-sm-1 col-form-label">m</label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Filter Size</label>
+                            <ValidationMessage For="@(()=>Lens.FilterSize)" />
+                            <InputNumber class="form-control col-sm-9" @bind-Value="Lens.FilterSize" />
+                            <label class="col-sm-1 col-form-label">mm</label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Max Reproduce Ratio</label>
+                            <ValidationMessage For="@(()=>Lens.MaxReproductionRatio)" />
+                            <InputNumber class="form-control col-sm-10" @bind-Value="Lens.MaxReproductionRatio" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Diaphragm Blades</label>
+                            <ValidationMessage For="@(()=>Lens.DiaphragmBlades)" />
+                            <InputNumber class="form-control col-sm-10" @bind-Value="Lens.DiaphragmBlades" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Lens Construction</label>
+                            <ValidationMessage For="@(()=>Lens.LensConstruction)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.LensConstruction" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Lens Mount</label>
+                            <ValidationMessage For="@(()=>Lens.MountId)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Lens.MountId">
+                                @foreach (Mount item in Mounts)
+                                        {
+                                    <option value="@item.MountId">@item.Name</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Made In Country: </label>
+                            <ValidationMessage For="@(()=>Lens.MadeInCountry)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Lens.MadeInCountry">
+                                @foreach (CountriesEnum item in Enum.GetValues(typeof(CountriesEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Dimensions</label>
+                            <ValidationMessage For="@(()=>Lens.Dimensions)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.Dimensions" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Weight</label>
+                            <ValidationMessage For="@(()=>Lens.Weight)" />
+                            <InputText class="form-control col-sm-10" @bind-Value="Lens.Weight" />
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Status </label>
+                            <ValidationMessage For="@(()=>Lens.Status)" />
+                            <InputSelect class="form-control col-sm-10" @bind-Value="Lens.Status">
+                                @foreach (StatusEnum item in Enum.GetValues(typeof(StatusEnum)))
+                                        {
+                                    <option value="@item">@item.GetDescription()</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        @if (!Lens.IsAttachedToCamera)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-check-label">Attached to camera?</label>
+                                <ValidationMessage For="@(() => Lens.IsAttachedToCamera)" />
+                                <InputCheckbox class="form-check" @bind-Value="Lens.IsAttachedToCamera" />
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 form-check-label">Attached to camera?</label>
+                                <ValidationMessage For="@(() => Lens.IsAttachedToCamera)" />
+                                <input class="form-check" type="checkbox" checked disabled />
+
+                            </div>
+                        }
+                        @if (!Lens.IsAttachedToCamera)
+                        {
+                            <div class="form-group row">
+                                 <label class="col-sm-2 form-check-label">Is For Sale?</label>
+                                <ValidationMessage For="@(() => Lens.IsForSale)" />
+                                <InputCheckbox class="form-check" @bind-Value="Lens.IsForSale" />
+                               
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Comment</label>
+                            <ValidationMessage For="@(()=>Lens.Comment)" />
+                            <InputTextArea class="form-control col-sm-10" @bind-Value="Lens.Comment" />
+                        </div>
+                        @if (Lens.Images != null && Lens.Images.Count > 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Edit Lens Images</label>
+                                @foreach (GearImage img in Lens.Images)
+                                {
+                                    <div>
+                                        <img src="@img.ImageUrl" width="100" />
+                                        <InputCheckbox class="form-cntrol col-sm-10" @bind-Value="img.IsUsed" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Images != null && Images.Count() > 0)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Add Images</label>
+                                @foreach (GearImage img in Images)
+                                {
+                                    <div>
+                                        <InputCheckbox class="form-check" @bind-Value="img.IsUsed" @onclick="@(e=>ImageCheckChanged(e,img))" />
+                                        <img src="@img.ImageUrl" width="100" />
+
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <label class="col-sm-2 col-form-label"></label>
+                        <button type="submit" class="btn btn-@ThemeColor">Save</button>
+                        <a class="btn btn-secondary" @onclick="@Close">Cancel</a>
+                    </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@code {
+    [Inject]
+    public ILensRepository LensRepository { get; set; }
+
+    [Inject]
+    public NavigationManager NavManager { get; set; }
+    [Parameter]
+    public long Id { get; set; } = 0;
+    [Parameter]
+    public bool IsAttched { get; set; } = false;
+
+    public Lens Lens { get; set; } = new Lens();
+    [Parameter]
+    public IEnumerable<Mount> Mounts { get; set; }
+    [Parameter]
+    public IEnumerable<GearImage> Images { get; set; }
+    [Parameter]
+    public EventCallback<long> AssociatedLensAdded { get; set; }
+
+    public bool ShowDialog
+    {
+        get;
+        set;
+    }
+    public void Show()
+    {
+        InitDialog();
+        ShowDialog = true;
+        StateHasChanged();
+   }
+    public void Close()
+    {
+        ResetDialog();
+
+        ShowDialog = false;
+        StateHasChanged();
+
+        if (!IsAttched)
+        {
+            NavManager.NavigateTo("/admin/lenses", true);
+        }
+
+
+
+    }
+    private void InitDialog()
+    {
+        if (Id == 0)
+        {
+            Lens = new Lens();
+            if (IsAttched)
+            {
+                Lens.IsAttachedToCamera = true;
+            }
+        }
+    }
+    private void ResetDialog()
+    {
+        LensRepository.RejectChanges();
+
+    }
+   
+    protected void ImageCheckChanged(MouseEventArgs e, GearImage image)
+    {
+        var result = Images;
+
+        if (!image.IsUsed)
+        {
+            if (Lens.Images == null)
+            {
+                Lens.Images = new List<GearImage>();
+            }
+            Lens.Images.Add(image);
+        }
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            Lens = await LensRepository.GetLens(Id);
+        }
+
+    }
+    protected async Task SaveLens()
+    {
+        if (Lens.Images != null && Lens.Images.Count > 0)
+        {
+            foreach (GearImage img in Lens.Images)
+            {
+                if (img.IsUsed == false)
+                {
+                    Lens.Images.Remove(img);
+                }
+            }
+        }
+        if (Id == 0)
+        {
+            if(IsAttched)
+            {
+                long lensId = await LensRepository.AddLens(Lens);
+                await OnAssociatedLensAdded(lensId);
+            }
+            else
+            {
+                await LensRepository.CreateLens(Lens);
+                ShowDialog = false;
+                StateHasChanged();
+                NavManager.NavigateTo("/admin/lenses", true);
+            }
+
+        }
+        else
+        {
+            await LensRepository.UpdateLens(Lens);
+
+            ShowDialog = false;
+            StateHasChanged();
+            NavManager.NavigateTo("/admin/lenses", true);
+
+        }
+
+
+    }
+
+    protected async Task OnAssociatedLensAdded(long value)
+    {
+        ShowDialog = false;
+        StateHasChanged();
+        await AssociatedLensAdded.InvokeAsync(value);
+    }
+
+    public string ThemeColor => Id == 0 ? "primary" : "warning";
+    public string TitleText => Id == 0 ? "Create" : "Edit";
+}
