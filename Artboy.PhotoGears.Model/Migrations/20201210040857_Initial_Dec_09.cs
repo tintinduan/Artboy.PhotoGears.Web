@@ -2,7 +2,7 @@
 
 namespace Artboy.PhotoGears.Models.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initial_Dec_09 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,7 +22,8 @@ namespace Artboy.PhotoGears.Models.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Dimensions = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Weight = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Weight = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsForSale = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,7 +34,7 @@ namespace Artboy.PhotoGears.Models.Migrations
                 name: "Mounts",
                 columns: table => new
                 {
-                    MountId = table.Column<int>(type: "int", nullable: false)
+                    MountId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FlangeFocalDistance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -54,7 +55,7 @@ namespace Artboy.PhotoGears.Models.Migrations
                     LensCategory = table.Column<int>(type: "int", nullable: false),
                     LensType = table.Column<int>(type: "int", nullable: false),
                     FocusingType = table.Column<int>(type: "int", nullable: false),
-                    MountId = table.Column<int>(type: "int", nullable: false),
+                    MountId = table.Column<long>(type: "bigint", nullable: false),
                     FocalLength = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApertureRange = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CloseFocusingDistance = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
@@ -71,7 +72,8 @@ namespace Artboy.PhotoGears.Models.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Dimensions = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Weight = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Weight = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsForSale = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,7 +97,8 @@ namespace Artboy.PhotoGears.Models.Migrations
                     ImageType = table.Column<int>(type: "int", nullable: false),
                     IsoRange = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SpeedRange = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MountId = table.Column<int>(type: "int", nullable: false),
+                    Shutter = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MountId = table.Column<long>(type: "bigint", nullable: false),
                     FocusingType = table.Column<int>(type: "int", nullable: false),
                     ExposureMode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExposureCompensation = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -111,7 +114,8 @@ namespace Artboy.PhotoGears.Models.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Dimensions = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Weight = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Weight = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsForSale = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

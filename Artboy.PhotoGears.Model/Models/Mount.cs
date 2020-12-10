@@ -11,7 +11,7 @@ namespace Artboy.PhotoGears.Models
     {
         [Key]
         [JsonIgnore]
-        public int MountId { get; set; }
+        public long MountId { get; set; }
         [Required(ErrorMessage = "Please enter a name")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Please enter a Flange Focal Distance")]

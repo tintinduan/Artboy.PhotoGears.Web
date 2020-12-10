@@ -136,7 +136,7 @@
 }
 @code {
     [Inject]
-    public IAccessoryRepository AccessoryRepository { get; set; }
+    public IGenericRepository<Accessory> AccessoryRepository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
@@ -195,7 +195,7 @@
     {
         if (Id != 0)
         {
-            Accessory = await AccessoryRepository.GetAccessory(Id);
+            Accessory = await AccessoryRepository.GetOneAsync(Id);
         }
 
     }
@@ -213,11 +213,11 @@
         }
         if (Id == 0)
         {
-            await AccessoryRepository.CreateAccessory(Accessory);
+            await AccessoryRepository.CreateNewAsync(Accessory);
         }
         else
         {
-            await AccessoryRepository.UpdateAccessory(Accessory);
+            await AccessoryRepository.UpdateOneAsync(Accessory);
         }
 
         ShowDialog = false;

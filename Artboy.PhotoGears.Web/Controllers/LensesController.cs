@@ -10,9 +10,9 @@ namespace Artboy.PhotoGears.Web.Controllers
 {
     public class LensesController : Controller
     {
-        private ILensRepository repository;
+        private IGenericRepository<Lens> repository;
         public int Page { get; set; }
-        public LensesController(ILensRepository repository)
+        public LensesController(IGenericRepository<Lens> repository)
         {
             this.repository = repository;
             Page = 1;
@@ -35,7 +35,7 @@ namespace Artboy.PhotoGears.Web.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            var result = await repository.GetLenses();
+            var result = await repository.GetAllAsync();
             if (!String.IsNullOrEmpty(searchString))
             {
                 if (!String.IsNullOrEmpty(lensType))
@@ -90,7 +90,7 @@ namespace Artboy.PhotoGears.Web.Controllers
         // GET: HomeController1/Details/5
         public async Task<IActionResult> Details(long id)
         {
-            Lens lens = await repository.GetLens(id);
+            Lens lens = await repository.GetOneAsync(id);
             if (lens != null)
             {
                 LensViewModel model = ViewModelFactory.LensDetails(lens);

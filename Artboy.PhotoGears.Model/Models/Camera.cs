@@ -25,7 +25,7 @@ namespace Artboy.PhotoGears.Models
         public string SpeedRange { get; set; }
         public string Shutter { get; set; }
         [JsonIgnore]
-        public int MountId { get; set; }
+        public long MountId { get; set; }
         [JsonPropertyName("Lens Mount")]
         public Mount LensMount { get; set; }
         [JsonPropertyName("Focusing Type")]

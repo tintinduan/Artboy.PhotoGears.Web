@@ -10,9 +10,9 @@ namespace Artboy.PhotoGears.Web.Controllers
 {
     public class AccessoriesController : Controller
     {
-        private IAccessoryRepository repository;
+        private IGenericRepository<Accessory> repository;
         public int Page { get; set; }
-        public AccessoriesController(IAccessoryRepository repository)
+        public AccessoriesController(IGenericRepository<Accessory> repository)
         {
             this.repository = repository;
             Page = 1;
@@ -37,7 +37,7 @@ namespace Artboy.PhotoGears.Web.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            var result = await repository.GetAccessories();
+            var result = await repository.GetAllAsync();
             if (!String.IsNullOrEmpty(searchString))
             {
                result = result.Where(s => s.Model.ToUpper().Contains(searchString.ToUpper()) ||
@@ -79,7 +79,7 @@ namespace Artboy.PhotoGears.Web.Controllers
         // GET: HomeController1/Details/5
         public async Task<IActionResult> Details(long id)
         {
-            Accessory accessory = await repository.GetAccessory(id);
+            Accessory accessory = await repository.GetOneAsync(id);
             if (accessory != null)
             {
                 AccessoryViewModel model = ViewModelFactory.AccessoryDetails(accessory);

@@ -106,11 +106,11 @@ using Microsoft.AspNetCore.Authorization;
 #line 67 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\MountEditor.razor"
        
     [Inject]
-    public IMountRepository Repository { get; set; }
+    public IGenericRepository<Mount> Repository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
-    public int Id { get; set; } = 0;
+    public long Id { get; set; } = 0;
     [Parameter]
     public Mount Mount { get; set; } = new Mount();
 
@@ -151,18 +151,18 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (Id != 0)
         {
-            Mount = await Repository.GetMount(Id);
+            Mount = await Repository.GetOneAsync(Id);
         }
     }
     protected async Task SaveMount()
     {
         if (Id == 0)
         {
-            await Repository.CreateMount(Mount);
+            await Repository.CreateNewAsync(Mount);
         }
         else
         {
-            await Repository.UpdateMount(Mount);
+            await Repository.UpdateOneAsync(Mount);
         }
 
         ShowDialog = false;

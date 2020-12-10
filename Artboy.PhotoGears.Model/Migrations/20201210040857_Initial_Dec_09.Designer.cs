@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Artboy.PhotoGears.Models.Migrations
 {
     [DbContext(typeof(PhotoGearsDbContext))]
-    [Migration("20201204030922_Initial")]
-    partial class Initial
+    [Migration("20201210040857_Initial_Dec_09")]
+    partial class Initial_Dec_09
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,6 +42,9 @@ namespace Artboy.PhotoGears.Models.Migrations
 
                     b.Property<string>("Dimensions")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsForSale")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MadeInCountry")
                         .HasColumnType("int");
@@ -106,6 +109,9 @@ namespace Artboy.PhotoGears.Models.Migrations
                     b.Property<bool>("IsDigital")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsForSale")
+                        .HasColumnType("bit");
+
                     b.Property<string>("IsoRange")
                         .HasColumnType("nvarchar(max)");
 
@@ -121,13 +127,16 @@ namespace Artboy.PhotoGears.Models.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MountId")
-                        .HasColumnType("int");
+                    b.Property<long>("MountId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("PowerSource")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SerialNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Shutter")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpeedRange")
@@ -226,6 +235,9 @@ namespace Artboy.PhotoGears.Models.Migrations
                     b.Property<bool>("IsAttachedToCamera")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsForSale")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LensCategory")
                         .HasColumnType("int");
 
@@ -247,8 +259,8 @@ namespace Artboy.PhotoGears.Models.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MountId")
-                        .HasColumnType("int");
+                    b.Property<long>("MountId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
@@ -268,9 +280,9 @@ namespace Artboy.PhotoGears.Models.Migrations
 
             modelBuilder.Entity("Artboy.PhotoGears.Models.Mount", b =>
                 {
-                    b.Property<int>("MountId")
+                    b.Property<long>("MountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .UseIdentityColumn();
 
                     b.Property<decimal>("FlangeFocalDistance")

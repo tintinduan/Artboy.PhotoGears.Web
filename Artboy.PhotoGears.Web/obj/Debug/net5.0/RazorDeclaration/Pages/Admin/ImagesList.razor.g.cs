@@ -108,7 +108,7 @@ using Microsoft.AspNetCore.Authorization;
 #line 55 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\ImagesList.razor"
        
     [Inject]
-    public IImageRepository Repository { get; set; }
+    public IGenericRepository<GearImage> Repository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
@@ -126,7 +126,7 @@ using Microsoft.AspNetCore.Authorization;
     }
     public async Task UpdateData()
     {
-        ImageData = await Repository.ListImages(Page, 5);
+        ImageData = await Repository.ListAllAsync(Page, 5);
 
     }
 
@@ -134,7 +134,7 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (imageId != 0)
         {
-            SelectedImage = await Repository.GetImage(imageId);
+            SelectedImage = await Repository.GetOneAsync(imageId);
         }
         else
         {
@@ -144,7 +144,7 @@ using Microsoft.AspNetCore.Authorization;
     }
     protected async Task Delete_Click(MouseEventArgs e, long imageId)
     {
-        SelectedImage = await Repository.GetImage(imageId);
+        SelectedImage = await Repository.GetOneAsync(imageId);
         DeleteConfirmation.Show();
     }
 
@@ -155,7 +155,7 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (deleteConfirmed)
         {
-            await Repository.DeleteImage(SelectedImage);
+            await Repository.DeleteOneAsync(SelectedImage);
             await UpdateData();
         }
     }

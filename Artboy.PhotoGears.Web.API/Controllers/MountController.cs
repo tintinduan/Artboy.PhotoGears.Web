@@ -15,8 +15,8 @@ namespace Artboy.PhotoGears.Web.API.Controllers
     //[Authorize(AuthenticationSchemes = "Identity.Application, Bearer")]
     public class MountController : ControllerBase
     {
-        private IMountRepository repository;
-        public MountController(IMountRepository repo)
+        private IGenericRepository<Mount> repository;
+        public MountController(IGenericRepository<Mount> repo)
         {
             repository = repo;
         }
@@ -26,7 +26,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetMounts()
         {
-            var result = await repository.GetMounts();
+            var result = await repository.GetAllAsync();
             if(result == null || result.Count() ==0)
             {
                 return NotFound();
@@ -39,7 +39,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetMount(int id)
         {
-            Mount mount = await repository.GetMount(id);
+            Mount mount = await repository.GetOneAsync(id);
             if (mount == null)
             {
                 return NotFound();

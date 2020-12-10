@@ -125,8 +125,8 @@ namespace Artboy.PhotoGears.Models.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MountId")
-                        .HasColumnType("int");
+                    b.Property<long>("MountId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("PowerSource")
                         .HasColumnType("nvarchar(max)");
@@ -257,8 +257,8 @@ namespace Artboy.PhotoGears.Models.Migrations
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MountId")
-                        .HasColumnType("int");
+                    b.Property<long>("MountId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
@@ -278,9 +278,9 @@ namespace Artboy.PhotoGears.Models.Migrations
 
             modelBuilder.Entity("Artboy.PhotoGears.Models.Mount", b =>
                 {
-                    b.Property<int>("MountId")
+                    b.Property<long>("MountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .UseIdentityColumn();
 
                     b.Property<decimal>("FlangeFocalDistance")

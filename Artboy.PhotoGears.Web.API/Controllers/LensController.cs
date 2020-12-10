@@ -15,8 +15,8 @@ namespace Artboy.PhotoGears.Web.API.Controllers
     [Authorize]
     public class LensController : ControllerBase
     {
-        private ILensRepository repository;
-        public LensController(ILensRepository repo)
+        private IGenericRepository<Lens> repository;
+        public LensController(IGenericRepository<Lens> repo)
         {
             repository = repo;
         }
@@ -26,7 +26,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetLens()
         {
-            var result = await repository.GetLenses();
+            var result = await repository.GetAllAsync();
             if(result == null || result.Count() == 0)
             {
                 return NotFound();
@@ -39,7 +39,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult>GetLens(long id)
         {
-            Lens lens = await repository.GetLens(id);
+            Lens lens = await repository.GetOneAsync(id);
             if(lens == null)
             {
                 return NotFound();

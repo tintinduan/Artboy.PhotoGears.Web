@@ -106,7 +106,7 @@ using Microsoft.AspNetCore.Authorization;
 #line 137 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\AccessoryEditor.razor"
        
     [Inject]
-    public IAccessoryRepository AccessoryRepository { get; set; }
+    public IGenericRepository<Accessory> AccessoryRepository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
@@ -165,7 +165,7 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (Id != 0)
         {
-            Accessory = await AccessoryRepository.GetAccessory(Id);
+            Accessory = await AccessoryRepository.GetOneAsync(Id);
         }
 
     }
@@ -183,11 +183,11 @@ using Microsoft.AspNetCore.Authorization;
         }
         if (Id == 0)
         {
-            await AccessoryRepository.CreateAccessory(Accessory);
+            await AccessoryRepository.CreateNewAsync(Accessory);
         }
         else
         {
-            await AccessoryRepository.UpdateAccessory(Accessory);
+            await AccessoryRepository.UpdateOneAsync(Accessory);
         }
 
         ShowDialog = false;

@@ -7,7 +7,7 @@ using Artboy.PhotoGears.Models.Helpers;
 
 namespace Artboy.PhotoGears.Models
 {
-    public class EFCameraRepository : ICameraRepository
+    public class EFCameraRepository : IGenericRepository<Camera>
     {
         private PhotoGearsDbContext context;
 
@@ -17,28 +17,28 @@ namespace Artboy.PhotoGears.Models
         {
             this.context = context;
         }
-        public async Task<IEnumerable<Camera>> GetCameras()
+        public async Task<IEnumerable<Camera>> GetAllAsync()
         {
             return await context.Cameras.Include(c=>c.Images).Include(c=>c.AssociatedLens)
                         .Include(c=>c.LensMount).ToListAsync();
         }
-        public async Task<Camera> GetCamera(long id)
+        public async Task<Camera> GetOneAsync(long id)
         {
             return await context.Cameras.Include(c => c.Images).Include(c => c.AssociatedLens)
                         .Include(c => c.LensMount).FirstOrDefaultAsync(c=>c.Id == id);
         }
-        public async Task CreateCamera(Camera newCamera)
+        public async Task CreateNewAsync(Camera newCamera)
         {
             await context.Cameras.AddAsync(newCamera);
             await context.SaveChangesAsync();
         }
-        public async Task UpdateCamera(Camera camera)
+        public async Task UpdateOneAsync(Camera camera)
         {
             context.Cameras.Update(camera);
             await context.SaveChangesAsync();
         }    
 
-        public async Task DeleteCamera(Camera camera)
+        public async Task DeleteOneAsync(Camera camera)
         {
            context.Cameras.Remove(camera);
            await context.SaveChangesAsync();
@@ -48,15 +48,21 @@ namespace Artboy.PhotoGears.Models
         {
             context.RejectChanges();
         }
-
-        public async Task<PageResult<Camera>> ListCameras(int page, int pageSize)
+        public async Task<PageResult<Camera>> ListAllAsync(int page, int pageSize)
         {
             return await context.Cameras.GetPagedAsync(page, pageSize);
         }
 
-        public Task<PageResult<Camera>> SearchCameras(string term, int page)
+        public Task<PageResult<Camera>> SearchAnyAsync(string term, int page)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<long> AddNewAsync(Camera newItem)
+        {
+            var result = await context.Cameras.AddAsync(newItem);
+            await context.SaveChangesAsync();
+            return result.Entity.Id;
         }
     }
 }

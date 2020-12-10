@@ -106,9 +106,9 @@ using Microsoft.AspNetCore.Authorization;
 #line 237 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\CameraEditor.razor"
        
     [Inject]
-    public ICameraRepository CameraRepository { get; set; }
+    public IGenericRepository<Camera> CameraRepository { get; set; }
     [Inject]
-    public ILensRepository LensRepository { get; set; }
+    public IGenericRepository<Lens> LensRepository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
@@ -175,11 +175,10 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (Id != 0)
         {
-            Camera = await CameraRepository.GetCamera(Id);
+            Camera = await CameraRepository.GetOneAsync(Id);
             if(Camera.LensId != null)
             {
                 Lens = Camera.AssociatedLens;
-                //Lens = await LensRepository.GetLens((long)Camera.LensId);
             }
         }
     }
@@ -203,11 +202,11 @@ using Microsoft.AspNetCore.Authorization;
 
         if (Id == 0)
         {
-            await CameraRepository.CreateCamera(Camera);
+            await CameraRepository.CreateNewAsync(Camera);
         }
         else
         {
-            await CameraRepository.UpdateCamera(Camera);
+            await CameraRepository.UpdateOneAsync(Camera);
         }
 
         ShowDialog = false;
@@ -218,7 +217,7 @@ using Microsoft.AspNetCore.Authorization;
     public async Task ConfirmAddLens(long lensId)
     {
         Camera.LensId = lensId;
-        Lens = await LensRepository.GetLens(lensId);
+        Lens = await LensRepository.GetOneAsync(lensId);
     }
     public string ThemeColor => Id == 0 ? "primary" : "warning";
     public string TitleText => Id == 0 ? "Create" : "Edit";

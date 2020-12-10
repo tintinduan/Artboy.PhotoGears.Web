@@ -108,11 +108,11 @@ using Microsoft.AspNetCore.Authorization;
 #line 68 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\AccessoriesList.razor"
      
     [Inject]
-    public IAccessoryRepository AccessoryRepository { get; set; }
+    public IGenericRepository<Accessory> AccessoryRepository { get; set; }
     [Inject]
-    public IImageRepository ImageRepository { get; set; }
+    public IGenericRepository<GearImage> ImageRepository { get; set; }
     [Inject]
-    public IMountRepository MountRepository { get; set; }
+    public IGenericRepository<Mount> MountRepository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     public PageResult<Accessory> AccessoryData { get; set; } = new PageResult<Accessory>();
@@ -126,15 +126,15 @@ using Microsoft.AspNetCore.Authorization;
 
     protected async override Task OnInitializedAsync()
     {
-        MountsData = await MountRepository.GetMounts();
-        var result = await ImageRepository.GetImages();
+        MountsData = await MountRepository.GetAllAsync();
+        var result = await ImageRepository.GetAllAsync();
         ImagesData = result.Where(c => c.IsUsed == false && c.ImageCategory == ImageCategoryEnum.Accessory);
         Page = (Page == 0) ? 1 : Page;
         await UpdateData();
     }
     public async Task UpdateData()
     {
-        AccessoryData = await AccessoryRepository.ListAccessories(Page, 8);
+        AccessoryData = await AccessoryRepository.ListAllAsync(Page, 8);
         StateHasChanged();
     }
 
@@ -142,7 +142,7 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (id != 0)
         {
-            SelectedAccessory = await AccessoryRepository.GetAccessory(id);
+            SelectedAccessory = await AccessoryRepository.GetOneAsync(id);
         }
         else
         {
@@ -153,7 +153,7 @@ using Microsoft.AspNetCore.Authorization;
     }
     protected async Task Delete_Click(MouseEventArgs e, long id)
     {
-        SelectedAccessory = await AccessoryRepository.GetAccessory(id);
+        SelectedAccessory = await AccessoryRepository.GetOneAsync(id);
         DeleteConfirmation.Show();
     }
 
@@ -166,11 +166,11 @@ using Microsoft.AspNetCore.Authorization;
                 foreach (var img in SelectedAccessory.Images)
                 {
                     img.IsUsed = false;
-                    await ImageRepository.UpdateImage(img);
+                    await ImageRepository.UpdateOneAsync(img);
                 }
             }
 
-            await AccessoryRepository.DeleteAccessory(SelectedAccessory);
+            await AccessoryRepository.DeleteOneAsync(SelectedAccessory);
             await UpdateData();
         }
     }

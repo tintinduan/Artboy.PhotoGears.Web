@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Artboy.PhotoGears.Models
 {
-    public class EFLensRepository : ILensRepository
+    public class EFLensRepository : IGenericRepository<Lens>
     {
         private PhotoGearsDbContext context;
 
@@ -18,30 +18,30 @@ namespace Artboy.PhotoGears.Models
             this.context = context;
         }
 
-        public async Task<Lens> GetLens(long id)
+        public async Task<Lens> GetOneAsync(long id)
         {
             return await context.Lenses.Include(c => c.Images)
                         .Include(c => c.LensMount).FirstOrDefaultAsync(c=>c.Id == id);
         }
 
-        public async Task<IEnumerable<Lens>> GetLenses()
+        public async Task<IEnumerable<Lens>> GetAllAsync()
         {
             return await context.Lenses.Include(c=>c.Images).Include(c=>c.LensMount)
                         .Where(c=>c.IsAttachedToCamera==false).ToListAsync();
         }
 
-        public async Task UpdateLens(Lens lens)
+        public async Task UpdateOneAsync(Lens lens)
         {
             context.Lenses.Update(lens);
             await context.SaveChangesAsync();
         }
-        public async Task  CreateLens(Lens newLens)
+        public async Task  CreateNewAsync(Lens newLens)
         {
             await context.Lenses.AddAsync(newLens);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteLens(Lens lens)
+        public async Task DeleteOneAsync(Lens lens)
         {
            context.Lenses.Remove(lens);
            await context.SaveChangesAsync();
@@ -52,18 +52,18 @@ namespace Artboy.PhotoGears.Models
             context.RejectChanges();
         }
 
-        public async Task<PageResult<Lens>> ListLenses(int page, int pageSize)
+        public async Task<PageResult<Lens>> ListAllAsync(int page, int pageSize)
         {
            return await context.Lenses.GetPagedAsync(page, pageSize);
         }
 
-        public async Task<PageResult<Lens>> SearchLenses(string term, int page)
+        public async Task<PageResult<Lens>> SearchAnyAsync(string term, int page)
         {
             return await context.Lenses.Where(c => c.Model.Contains(term))
                 .GetPagedAsync(page, 10);
         }
 
-        public async Task<long> AddLens(Lens newLens)
+        public async Task<long> AddNewAsync(Lens newLens)
         {
             var result = await context.Lenses.AddAsync(newLens);
             await context.SaveChangesAsync();

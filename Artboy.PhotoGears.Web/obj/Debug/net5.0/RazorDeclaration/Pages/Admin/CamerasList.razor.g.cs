@@ -109,11 +109,11 @@ using Microsoft.AspNetCore.Authorization;
 #line 69 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\CamerasList.razor"
      
     [Inject]
-    public ICameraRepository CameraRepository { get; set; }
+    public IGenericRepository<Camera> CameraRepository { get; set; }
     [Inject]
-    public IImageRepository ImageRepository { get; set; }
+    public IGenericRepository<GearImage> ImageRepository { get; set; }
     [Inject]
-    public IMountRepository MountRepository { get; set; }
+    public IGenericRepository<Mount> MountRepository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
@@ -127,14 +127,14 @@ using Microsoft.AspNetCore.Authorization;
     protected async override Task OnInitializedAsync()
     {
         Page = (Page == 0) ? 1 : Page;
-        MountData = await MountRepository.GetMounts();
-        var result = await ImageRepository.GetImages();
+        MountData = await MountRepository.GetAllAsync();
+        var result = await ImageRepository.GetAllAsync();
         ImageData = result.Where(c => c.IsUsed == false && c.ImageCategory == ImageCategoryEnum.Camera);
         await UpdateData();
     }
     public async Task UpdateData()
     {
-        CameraData = await CameraRepository.ListCameras(Page,8);
+        CameraData = await CameraRepository.ListAllAsync(Page,8);
         StateHasChanged();
     }
 
@@ -142,7 +142,7 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (id != 0)
         {
-            SelectedCamera = await CameraRepository.GetCamera(id);
+            SelectedCamera = await CameraRepository.GetOneAsync(id);
         }
         else
         {
@@ -154,7 +154,7 @@ using Microsoft.AspNetCore.Authorization;
     }
     protected async Task Delete_Click(MouseEventArgs e, long id)
     {
-        SelectedCamera = await CameraRepository.GetCamera(id);
+        SelectedCamera = await CameraRepository.GetOneAsync(id);
         DeleteConfirmation.Show();
     }
 
@@ -167,10 +167,10 @@ using Microsoft.AspNetCore.Authorization;
                 foreach (var img in SelectedCamera.Images)
                 {
                     img.IsUsed = false;
-                    await ImageRepository.UpdateImage(img);
+                    await ImageRepository.UpdateOneAsync(img);
                 }
             }
-            await CameraRepository.DeleteCamera(SelectedCamera);
+            await CameraRepository.DeleteOneAsync(SelectedCamera);
             await UpdateData();
         }
     }

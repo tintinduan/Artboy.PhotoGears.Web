@@ -109,7 +109,7 @@ using Microsoft.AspNetCore.Authorization;
     [Inject]
     public IWebHostEnvironment WebHostEnv { get; set; }
     [Inject]
-    public IImageRepository Repository { get; set; }
+    public IGenericRepository<GearImage> Repository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
@@ -164,7 +164,7 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (Id != 0)
         {
-            Image = await Repository.GetImage(Id);
+            Image = await Repository.GetOneAsync(Id);
         }
     }
     protected async Task SaveImageToFolder()
@@ -184,11 +184,11 @@ using Microsoft.AspNetCore.Authorization;
         if (Id == 0)
         {
             await SaveImageToFolder();
-            await Repository.CreateImage(Image);
+            await Repository.CreateNewAsync(Image);
         }
         else
         {
-            await Repository.UpdateImage(Image);
+            await Repository.UpdateOneAsync(Image);
         }
 
         ShowDialog = false;

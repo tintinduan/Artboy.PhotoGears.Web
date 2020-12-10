@@ -14,8 +14,8 @@ namespace Artboy.PhotoGears.Web.API.Controllers
     [Authorize]
     public class CameraController : ControllerBase
     {
-        private ICameraRepository repository;
-        public CameraController(ICameraRepository repo)
+        private IGenericRepository<Camera> repository;
+        public CameraController(IGenericRepository<Camera> repo)
         {
             repository = repo;
         }
@@ -25,7 +25,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetCameras()
         {
-            var result = await repository.GetCameras();
+            var result = await repository.GetAllAsync();
             if(result == null || result.Count() == 0)
             {
                 return NotFound();
@@ -38,7 +38,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetCamera(long id)
         {
-            Camera c = await repository.GetCamera(id);
+            Camera c = await repository.GetOneAsync(id);
             if(c==null)
             {
                 return NotFound();

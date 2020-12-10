@@ -106,7 +106,7 @@ using Microsoft.AspNetCore.Authorization;
 #line 230 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\LensEditor.razor"
        
     [Inject]
-    public ILensRepository LensRepository { get; set; }
+    public IGenericRepository<Lens> LensRepository { get; set; }
 
     [Inject]
     public NavigationManager NavManager { get; set; }
@@ -184,7 +184,7 @@ using Microsoft.AspNetCore.Authorization;
     {
         if (Id != 0)
         {
-            Lens = await LensRepository.GetLens(Id);
+            Lens = await LensRepository.GetOneAsync(Id);
         }
 
     }
@@ -204,12 +204,12 @@ using Microsoft.AspNetCore.Authorization;
         {
             if(IsAttched)
             {
-                long lensId = await LensRepository.AddLens(Lens);
+                long lensId = await LensRepository.AddNewAsync(Lens);
                 await OnAssociatedLensAdded(lensId);
             }
             else
             {
-                await LensRepository.CreateLens(Lens);
+                await LensRepository.CreateNewAsync(Lens);
                 ShowDialog = false;
                 StateHasChanged();
                 NavManager.NavigateTo("/admin/lenses", true);
@@ -218,7 +218,7 @@ using Microsoft.AspNetCore.Authorization;
         }
         else
         {
-            await LensRepository.UpdateLens(Lens);
+            await LensRepository.UpdateOneAsync(Lens);
 
             ShowDialog = false;
             StateHasChanged();

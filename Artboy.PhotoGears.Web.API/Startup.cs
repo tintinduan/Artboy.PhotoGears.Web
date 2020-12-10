@@ -33,11 +33,11 @@ namespace Artboy.PhotoGears.Web.API
             opts.UseSqlServer(Configuration["ConnectionStrings:PhotoGearsConnection"]);
             });
 
-            services.AddScoped<ICameraRepository, EFCameraRepository>();
-            services.AddScoped<ILensRepository, EFLensRepository>();
-            services.AddScoped<IAccessoryRepository, EFAccessoryRepository>();
-            services.AddScoped<IImageRepository, EFImageRepository>();
-            services.AddScoped<IMountRepository, EFMountRepository>();
+            //services.AddScoped<ICameraRepository, EFCameraRepository>();
+            //services.AddScoped<ILensRepository, EFLensRepository>();
+            //services.AddScoped<IAccessoryRepository, EFAccessoryRepository>();
+            //services.AddScoped<IImageRepository, EFImageRepository>();
+            //services.AddScoped<IMountRepository, EFMountRepository>();
 
             services.AddControllers().AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
             services.AddSwaggerGen(c =>

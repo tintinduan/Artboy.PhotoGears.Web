@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Artboy.PhotoGears.Models
 {
-    public class EFMountRepository : IMountRepository
+    public class EFMountRepository : IGenericRepository<Mount>
     {
         private PhotoGearsDbContext context;
 
@@ -17,33 +17,33 @@ namespace Artboy.PhotoGears.Models
         {
             this.context = context;
         }
-        public async Task<PageResult<Mount>> ListMounts(int page, int pageSize)
+        public async Task<PageResult<Mount>> ListAllAsync(int page, int pageSize)
         {
             var result = await context.Mounts.GetPagedAsync(page, pageSize);
             return result;
         }
-        public async Task<Mount> GetMount(int id)
+        public async Task<Mount> GetOneAsync(long id)
         {
             return await context.Mounts.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Mount>> GetMounts()
+        public async Task<IEnumerable<Mount>> GetAllAsync()
         {
             return await context.Mounts.ToListAsync();
         }
       
-        public async Task UpdateMount(Mount mount)
+        public async Task UpdateOneAsync(Mount mount)
         {
             context.Mounts.Update(mount);
             await context.SaveChangesAsync();
         }
-        public async Task CreateMount(Mount newMount)
+        public async Task CreateNewAsync(Mount newMount)
         {
             await context.Mounts.AddAsync(newMount);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteMount(Mount mount)
+        public async Task DeleteOneAsync(Mount mount)
         {
            context.Mounts.Remove(mount);
            await context.SaveChangesAsync();
@@ -53,10 +53,16 @@ namespace Artboy.PhotoGears.Models
             context.RejectChanges();
         }
 
-        public async Task<PageResult<Mount>> SearchMounts(string term, int page)
+        public async Task<PageResult<Mount>> SearchAnyAsync(string term, int page)
         {
             return await context.Mounts.Where(c => c.Name.Contains(term))
                     .GetPagedAsync(page, 10);
+        }
+        public async Task<long> AddNewAsync(Mount newItem)
+        {
+            var result = await context.Mounts.AddAsync(newItem);
+            await context.SaveChangesAsync();
+            return result.Entity.MountId;
         }
     }
 }

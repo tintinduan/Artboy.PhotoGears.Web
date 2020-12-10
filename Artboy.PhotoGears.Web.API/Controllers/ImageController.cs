@@ -14,8 +14,8 @@ namespace Artboy.PhotoGears.Web.API.Controllers
     [Authorize]
     public class ImageController : ControllerBase
     {
-        private IImageRepository repository;
-        public ImageController( IImageRepository repo)
+        private IGenericRepository<GearImage> repository;
+        public ImageController(IGenericRepository<GearImage> repo)
         {
             repository = repo;
         }
@@ -25,7 +25,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult>GetImages()
         {
-            var result = await repository.GetImages();
+            var result = await repository.GetAllAsync();
             if(result == null || result.Count()==0)
             {
                 return NotFound();
@@ -38,7 +38,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult>GetImage(long id)
         {
-            GearImage image = await repository.GetImage(id);
+            GearImage image = await repository.GetOneAsync(id);
             if(image==null)
             {
                 return NotFound();

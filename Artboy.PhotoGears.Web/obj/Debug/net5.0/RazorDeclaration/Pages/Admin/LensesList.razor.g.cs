@@ -108,11 +108,11 @@ using Microsoft.AspNetCore.Authorization;
 #line 68 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\LensesList.razor"
      
         [Inject]
-        public ILensRepository LensRepository { get; set; }
+        public IGenericRepository<Lens> LensRepository { get; set; }
         [Inject]
-        public IImageRepository ImageRepository { get; set; }
+        public IGenericRepository<GearImage> ImageRepository { get; set; }
         [Inject]
-        public IMountRepository MountRepository { get; set; }
+        public IGenericRepository<Mount> MountRepository { get; set; }
         [Inject]
         public NavigationManager NavManager { get; set; }
         public PageResult<Lens> LensData { get; set; } = new PageResult<Lens>();
@@ -126,15 +126,15 @@ using Microsoft.AspNetCore.Authorization;
 
         protected async override Task OnInitializedAsync()
         {
-            MountsData = await MountRepository.GetMounts();
-            var result = await ImageRepository.GetImages();
+            MountsData = await MountRepository.GetAllAsync();
+            var result = await ImageRepository.GetAllAsync();
             ImagesData = result.Where(c => c.IsUsed == false && c.ImageCategory == ImageCategoryEnum.Lens);
             Page = (Page == 0) ? 1 : Page;
             await UpdateData();
         }
         public async Task UpdateData()
         {
-            LensData = await LensRepository.ListLenses(Page,8);
+            LensData = await LensRepository.ListAllAsync(Page,8);
             StateHasChanged();
         }
 
@@ -142,7 +142,7 @@ using Microsoft.AspNetCore.Authorization;
         {
             if (id != 0)
             {
-                SelectedLens = await LensRepository.GetLens(id);
+                SelectedLens = await LensRepository.GetOneAsync(id);
             }
             else
             {
@@ -153,7 +153,7 @@ using Microsoft.AspNetCore.Authorization;
         }
         protected async Task Delete_Click(MouseEventArgs e, long id)
         {
-            SelectedLens = await LensRepository.GetLens(id);
+            SelectedLens = await LensRepository.GetOneAsync(id);
             DeleteConfirmation.Show();
         }
 
@@ -166,11 +166,11 @@ using Microsoft.AspNetCore.Authorization;
                     foreach (var img in SelectedLens.Images)
                     {
                         img.IsUsed = false;
-                        await ImageRepository.UpdateImage(img);
+                        await ImageRepository.UpdateOneAsync(img);
                     }
                 }
 
-                await LensRepository.DeleteLens(SelectedLens);
+                await LensRepository.DeleteOneAsync(SelectedLens);
                 await UpdateData();
             }
         }

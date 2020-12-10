@@ -14,8 +14,8 @@ namespace Artboy.PhotoGears.Web.API.Controllers
     [Authorize]
     public class AccessoryController : ControllerBase
     {
-        private IAccessoryRepository repository;
-        public AccessoryController(IAccessoryRepository repo)
+        private IGenericRepository<Accessory> repository;
+        public AccessoryController(IGenericRepository<Accessory> repo)
         {
             repository = repo;
         }
@@ -25,7 +25,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAccessories()
         {
-            var result = await repository.GetAccessories();
+            var result = await repository.GetAllAsync();
             if(result== null || result.Count() == 0)
             {
                 return NotFound();
@@ -38,7 +38,7 @@ namespace Artboy.PhotoGears.Web.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAccessory(long id)
         {
-            Accessory accessory = await repository.GetAccessory(id);
+            Accessory accessory = await repository.GetOneAsync(id);
             if(accessory == null)
             {
                 return NotFound();

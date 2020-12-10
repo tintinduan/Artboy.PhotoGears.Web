@@ -12,9 +12,9 @@ namespace Artboy.PhotoGears.Web.Controllers
 {
     public class CamerasController : Controller
     {
-        private ICameraRepository repository;
+        private IGenericRepository<Camera> repository;
         public int Page { get; set; } 
-        public CamerasController(ICameraRepository repository)
+        public CamerasController(IGenericRepository<Camera> repository)
         {
             this.repository = repository;
             Page = 1;
@@ -43,7 +43,7 @@ namespace Artboy.PhotoGears.Web.Controllers
             }
             ViewData["CurrentFilter"] = searchString;
 
-            var result = await repository.GetCameras();
+            var result = await repository.GetAllAsync();
             if(!String.IsNullOrEmpty(searchString))
             {
                 if (!String.IsNullOrEmpty(cameraType))
@@ -95,7 +95,7 @@ namespace Artboy.PhotoGears.Web.Controllers
         // GET: HomeController1/Details/5
         public async Task<IActionResult> Details(long id)
         {
-            Camera camera = await repository.GetCamera(id);
+            Camera camera = await repository.GetOneAsync(id);
             if (camera != null)
             {
                 CameraViewModel model = ViewModelFactory.CameraDetails(camera);

@@ -108,7 +108,7 @@ using Microsoft.AspNetCore.Authorization;
 #line 57 "C:\CodeBase\Projects\Artboy.PhotoGears.Web\Artboy.PhotoGears.Web\Pages\Admin\MountsList.razor"
        
     [Inject]
-    public IMountRepository Repository { get; set; }
+    public IGenericRepository<Mount> Repository { get; set; }
     [Inject]
     public NavigationManager NavManager { get; set; }
     [Parameter]
@@ -125,13 +125,13 @@ using Microsoft.AspNetCore.Authorization;
     }
     public async Task UpdateData()
     {
-        MountData = await Repository.ListMounts(Page,10);
+        MountData = await Repository.ListAllAsync(Page,10);
     }
-    protected async Task EditMount(MouseEventArgs e, int mountId)
+    protected async Task EditMount(MouseEventArgs e, long mountId)
     {
         if (mountId != 0)
         {
-            SelectedMount = await Repository.GetMount(mountId);
+            SelectedMount = await Repository.GetOneAsync(mountId);
         }
         else
         {
@@ -139,16 +139,16 @@ using Microsoft.AspNetCore.Authorization;
         }
         EditorDialog.Show();
     }
-    protected async Task Delete_Click(MouseEventArgs e, int mountId)
+    protected async Task Delete_Click(MouseEventArgs e, long mountId)
     {
-        SelectedMount = await Repository.GetMount(mountId);
+        SelectedMount = await Repository.GetOneAsync(mountId);
         ConfirmDialog.Show();
     }
     public async Task ConfirmDelete_Click(bool deleteConfirmed)
     {
         if (deleteConfirmed)
         {
-            await Repository.DeleteMount(SelectedMount);
+            await Repository.DeleteOneAsync(SelectedMount);
             await UpdateData();
         }
     }

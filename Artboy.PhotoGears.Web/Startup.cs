@@ -52,11 +52,12 @@ namespace Artboy.PhotoGears.Web
             services.AddSession();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<ICameraRepository, EFCameraRepository>();
-            services.AddScoped<ILensRepository, EFLensRepository>();
-            services.AddScoped<IAccessoryRepository, EFAccessoryRepository>();
-            services.AddScoped<IImageRepository, EFImageRepository>();
-            services.AddScoped<IMountRepository, EFMountRepository>();
+
+            services.AddScoped<IGenericRepository<Camera>, EFCameraRepository>();
+            services.AddScoped<IGenericRepository<Lens>, EFLensRepository>();
+            services.AddScoped<IGenericRepository<Accessory>, EFAccessoryRepository>();
+            services.AddScoped<IGenericRepository<GearImage>, EFImageRepository>();
+            services.AddScoped<IGenericRepository<Mount>, EFMountRepository>();
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Artboy.PhotoGears.Models
 {
-    public class EFImageRepository : IImageRepository
+    public class EFImageRepository : IGenericRepository<GearImage>
     {
         private PhotoGearsDbContext context;
 
@@ -18,28 +18,28 @@ namespace Artboy.PhotoGears.Models
             this.context = context;
         }
         
-        public async Task<GearImage> GetImage(long id)
+        public async Task<GearImage> GetOneAsync(long id)
         {
             return await context.GearImages.FindAsync(id);
         }
 
-        public async Task<IEnumerable<GearImage>> GetImages()
+        public async Task<IEnumerable<GearImage>> GetAllAsync()
         {
             return await context.GearImages.ToListAsync();
         }
 
-        public async Task UpdateImage(GearImage image)
+        public async Task UpdateOneAsync(GearImage image)
         {
             context.GearImages.Update(image);
             await context.SaveChangesAsync();
         }
-        public async Task CreateImage(GearImage newImage)
+        public async Task CreateNewAsync(GearImage newImage)
         {
             await context.GearImages.AddAsync(newImage);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteImage(GearImage image)
+        public async Task DeleteOneAsync(GearImage image)
         {
             context.GearImages.Remove(image);
             await context.SaveChangesAsync();
@@ -50,14 +50,21 @@ namespace Artboy.PhotoGears.Models
             context.RejectChanges();
         }
 
-        public Task<PageResult<GearImage>> ListImages(int page, int pageSize)
+        public async Task<PageResult<GearImage>> ListAllAsync(int page, int pageSize)
         {
-            return context.GearImages.GetPagedAsync(page, pageSize);
+            return await context.GearImages.GetPagedAsync(page, pageSize);
         }
 
-        public Task<PageResult<GearImage>> SearchImages(string term, int page)
+        public Task<PageResult<GearImage>> SearchAnyAsync(string term, int page)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<long> AddNewAsync(GearImage newItem)
+        {
+            var result = await context.GearImages.AddAsync(newItem);
+            await context.SaveChangesAsync();
+            return result.Entity.Id;
         }
     }
 }

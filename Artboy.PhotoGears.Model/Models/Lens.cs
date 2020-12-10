@@ -23,7 +23,7 @@ namespace Artboy.PhotoGears.Models
         [Required]
         [Range(1,Int32.MaxValue,ErrorMessage ="Please Select a lens mount")]
         [JsonIgnore]
-        public int MountId { get; set; }
+        public long MountId { get; set; }
         [JsonPropertyName("Lens Mount")]
         public Mount LensMount { get; set; }
         [JsonPropertyName("Focal Length")]
